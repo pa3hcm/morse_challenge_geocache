@@ -36,7 +36,7 @@ void setup() {
 }
 
 int i=0;         // generic counter
-int question=10;  // question number
+int question=1;  // question number
 int state=1;     // program state, 1=init
 int answer=99;   // the given answer
 int rightanswer; // the answer to be guessed

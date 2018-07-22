@@ -3,6 +3,7 @@
 //
 // Dependencies:
 // - SevenSeg: https://github.com/sigvaldm/SevenSeg
+// - Servo: bundled with the Arduino IDE
 //
 // For more information please read the bundled readme.md.
 

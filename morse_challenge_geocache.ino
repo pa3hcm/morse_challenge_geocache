@@ -14,6 +14,8 @@ int digitPins[numOfDigits]={0};
 
 #include <Servo.h>
 Servo doorlock;
+const int lock_open = 40;
+const int lock_close = 87;
 
 void setup() {
     pinMode(0, OUTPUT);  // 7-segment display common anode
@@ -33,6 +35,7 @@ void setup() {
     disp.setTimer(2);
     randomSeed(analogRead(5));
     doorlock.attach(9);
+    doorlock.write(lock_close); // ensure door is closed
 }
 
 int i=0;         // generic counter
@@ -45,7 +48,6 @@ void loop() {
     switch(state) {
         case 1: // init
             disp.startTimer();
-            doorlock.write(0); // ensure door is closed
             for(i=0;i<=9;i++) {
                 disp.write(i);
                 delay(100);
@@ -92,21 +94,27 @@ void loop() {
             }
             break;
         case 6: // unlock the door
-            doorlock.write(180); // open the door lock!
             tatatataaa();
+            delay(200);
+            doorlock.write(lock_open); // open the door lock!
             state=7;
             break;
-        case 7: // wait for door to close
-            break;
-        case 8: // lock the door
-            if(digitalRead(10)) {
-                delay(250);
-                doorlock.write(0); // close the door
+        case 7: // lock the door when button pressed
+            if(digitalRead(8)) { // Button pushed!
+                doorlock.write(lock_close); // close the door lock
                 delay(1000);
-                state=9;
+                state=8;
             }
             break;
-        case 9: // the end
+        case 8: // open the door again when lock was not successfull
+            if(digitalRead(8)) { // Button pushed!
+                doorlock.write(lock_open); // open the door lock
+                delay(1000);
+                state=7; // allow the user to close it again
+            }
+            break;
+        case 9: // obsolete, user will normally end in state 7
+            delay(10000); // nothing to do
             break;
         default:
             state=1;

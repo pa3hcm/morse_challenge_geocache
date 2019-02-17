@@ -1,5 +1,5 @@
-// Morse Challenge Geocache v1 - 2018-07-22
-// (c) 2018 Ernest Neijenhuis PA3HCM
+// Morse Challenge Geocache v1 - 2019-02-17
+// (c) 2019 Ernest Neijenhuis PA3HCM
 //
 // Dependencies:
 // - SevenSeg: https://github.com/sigvaldm/SevenSeg

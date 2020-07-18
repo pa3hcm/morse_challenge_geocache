@@ -1,5 +1,5 @@
-// Morse Challenge Geocache v1 - 2019-02-17
-// (c) 2019 Ernest Neijenhuis PA3HCM
+// Morse Challenge Geocache v2 - 2020-07-18
+// (c) Ernest Neijenhuis PA3HCM
 //
 // Dependencies:
 // - SevenSeg: https://github.com/sigvaldm/SevenSeg
@@ -14,8 +14,8 @@ int digitPins[numOfDigits]={0};
 
 #include <Servo.h>
 Servo doorlock;
-const int lock_open = 40;
-const int lock_close = 87;
+const int lockOpen = 35;
+const int lockClose = 87;
 
 void setup() {
     pinMode(0, OUTPUT);  // 7-segment display common anode
@@ -35,7 +35,7 @@ void setup() {
     disp.setTimer(2);
     randomSeed(analogRead(5));
     doorlock.attach(9);
-    doorlock.write(lock_close); // ensure door is closed
+    doorlock.write(lockClose); // ensure door is closed
 }
 
 int i=0;         // generic counter
@@ -50,7 +50,7 @@ void loop() {
             disp.startTimer();
             for(i=0;i<=9;i++) {
                 disp.write(i);
-                delay(100);
+                delay(80);
             }
             disp.stopTimer();
             disp.clearDisp();
@@ -96,25 +96,22 @@ void loop() {
         case 6: // unlock the door
             tatatataaa();
             delay(200);
-            doorlock.write(lock_open); // open the door lock!
+            doorOpen(); // open the door lock!
             state=7;
             break;
         case 7: // lock the door when button pressed
             if(digitalRead(8)) { // Button pushed!
-                doorlock.write(lock_close); // close the door lock
+                doorClose(); // close the door lock
                 delay(1000);
                 state=8;
             }
             break;
         case 8: // open the door again when lock was not successfull
             if(digitalRead(8)) { // Button pushed!
-                doorlock.write(lock_open); // open the door lock
+                doorOpen(); // open the door lock
                 delay(1000);
                 state=7; // allow the user to close it again
             }
-            break;
-        case 9: // obsolete, user will normally end in state 7
-            delay(10000); // nothing to do
             break;
         default:
             state=1;
@@ -214,7 +211,7 @@ void morse(int number, int question) {
 }
 
 void tatatataaa() {
-    // probably the poorest code play some winning tune...
+    // probably the poorest code to play some winning tune...
     for(i=1;i<15;i++) {
         digitalWrite(13, HIGH);
         delay(4);
@@ -244,6 +241,19 @@ void tatatataaa() {
     }
 }
 
+void doorOpen() {
+  for (int i=lockClose; i>=lockOpen; i--) {
+    doorlock.write(i);
+    delay(25);
+  }
+}
+
+void doorClose() {
+  for (int i=lockOpen; i<=lockClose; i++) {
+    doorlock.write(i);
+    delay(25);
+  }
+}
 
 ISR(TIMER2_COMPA_vect) {
     disp.interruptAction() ;
